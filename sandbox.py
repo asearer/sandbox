@@ -1,5 +1,7 @@
 import pygame
 import sys
+import os
+import subprocess
 
 # Initialize Pygame
 pygame.init()
@@ -17,7 +19,7 @@ GREEN = (0, 255, 0)
 font = pygame.font.SysFont(None, 60)
 
 # Display welcome message
-welcome_text_surface = font.render('Welcome...', True, GREEN)
+welcome_text_surface = font.render('Welcome', True, GREEN)
 welcome_text_rect = welcome_text_surface.get_rect(center=(WIDTH/2, HEIGHT/2 - 50))
 
 # Display "Click to Enter" button
@@ -34,7 +36,11 @@ while True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Check if the mouse is clicked on the button
             if button_text_rect.collidepoint(event.pos):
-                print("Entering sandbox world...")  # Placeholder action for entering the sandbox world
+                print("Entering 3D wireframe world...")
+                # Launch the wireframe_world.py script
+                subprocess.Popen(["python", "wireframe_world.py"])
+                pygame.quit()
+                sys.exit()
 
     # Fill the screen with black color
     screen.fill(BLACK)
