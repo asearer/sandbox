@@ -36,6 +36,7 @@ def draw():
     # Draw the orbiting spheres and rotate them
     draw_sphere(x1, 0, z1, angle)
     draw_sphere(x2, 0, z2, angle)
+    draw_sphere(-x1, 0, -z1, angle)
     
     # Increment rotation angle
     angle += 1
