@@ -32,14 +32,16 @@ def draw():
     z1 = orbit_radius * math.sin(math.radians(angle))
     x2 = orbit_radius * math.cos(math.radians(angle + 120))  # Offset the angle for the second orbiting sphere
     z2 = orbit_radius * math.sin(math.radians(angle + 120))
+
     
     # Draw the orbiting spheres and rotate them
     draw_sphere(x1, 0, z1, angle)
     draw_sphere(x2, 0, z2, angle)
     draw_sphere(-x1, 0, -z1, angle)
+    draw_sphere(-x2, 0, -z2, angle)
     
     # Increment rotation angle
-    angle += 1
+    angle += 2
     
     glutSwapBuffers()
 
