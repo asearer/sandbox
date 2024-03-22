@@ -9,10 +9,11 @@ import math
 angle = 0
 orbit_radius = 3  # Radius of the orbit
 
-def draw_sphere(x, y, z):
-    # Draw a sphere at the specified position
+def draw_sphere(x, y, z, rotation_angle):
+    # Draw a sphere at the specified position and rotate it around its own axis
     glPushMatrix()
     glTranslatef(x, y, z)
+    glRotatef(rotation_angle, 1, 1, 1)  # Rotate around own axis
     glutWireSphere(0.5, 10, 10)  # Adjust radius as needed
     glPopMatrix()
 
@@ -23,18 +24,18 @@ def draw():
     glLoadIdentity()
     gluLookAt(5, 5, 5, 0, 0, 0, 0, 1, 0)  # Eye position, center position, up vector
     
-    # Draw the central sphere
-    draw_sphere(0, 0, 0)
+    # Draw the central sphere and rotate it
+    draw_sphere(0, 0, 0, angle)
     
-    # Calculate positions of orbiting spheres
+    # Calculate positions and rotation angles of orbiting spheres
     x1 = orbit_radius * math.cos(math.radians(angle))
     z1 = orbit_radius * math.sin(math.radians(angle))
     x2 = orbit_radius * math.cos(math.radians(angle + 120))  # Offset the angle for the second orbiting sphere
     z2 = orbit_radius * math.sin(math.radians(angle + 120))
     
-    # Draw the orbiting spheres
-    draw_sphere(x1, 0, z1)
-    draw_sphere(x2, 0, z2)
+    # Draw the orbiting spheres and rotate them
+    draw_sphere(x1, 0, z1, angle)
+    draw_sphere(x2, 0, z2, angle)
     
     # Increment rotation angle
     angle += 1
