@@ -4,10 +4,12 @@ from OpenGL.GLU import *
 import pygame
 import sys
 import math
+import random  # Import the random module for introducing randomness
 
 # Variables for animation
 angle = 0
 orbit_radius = 3  # Radius of the orbit
+rotation_speed = 0.5  # Adjust rotation speed as needed (lower values mean slower rotation)
 
 def draw_sphere(x, y, z, rotation_angle):
     # Draw a sphere at the specified position and rotate it around its own axis
@@ -22,26 +24,27 @@ def draw():
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    gluLookAt(5, 5, 5, 0, 0, 0, 0, 1, 0)  # Eye position, center position, up vector
+    gluLookAt(5, 5, 5, 0, 0, 0, 0, 1, 0)
     
-    # Draw the central sphere and rotate it
     draw_sphere(0, 0, 0, angle)
     
-    # Calculate positions and rotation angles of orbiting spheres
-    x1 = orbit_radius * math.cos(math.radians(angle))
-    z1 = orbit_radius * math.sin(math.radians(angle))
-    x2 = orbit_radius * math.cos(math.radians(angle + 120))  # Offset the angle for the second orbiting sphere
-    z2 = orbit_radius * math.sin(math.radians(angle + 120))
-
+    # Draw spheres in concentric circles around the central sphere
+    num_orbits = 4  # Number of orbits
+    num_spheres_per_orbit = 8  # Number of spheres per orbit
     
-    # Draw the orbiting spheres and rotate them
-    draw_sphere(x1, 0, z1, angle)
-    draw_sphere(x2, 0, z2, angle)
-    draw_sphere(-x1, 0, -z1, angle)
-    draw_sphere(-x2, 0, -z2, angle)
+    for i in range(num_orbits):
+        orbit_angle = angle + i * 45  # Offset the angle for each orbit
+        
+        for j in range(num_spheres_per_orbit):
+            sphere_angle = j * (360 / num_spheres_per_orbit)  # Angle for placing spheres evenly
+                
+            x = orbit_radius * math.cos(math.radians(orbit_angle))
+            z = orbit_radius * math.sin(math.radians(orbit_angle))
+            y = orbit_radius * math.sin(math.radians(sphere_angle)) * math.cos(math.radians(orbit_angle))  # Adjust y position
+            
+            draw_sphere(x, y, z, angle)
     
-    # Increment rotation angle
-    angle += 2
+    angle += rotation_speed  # Decreased speed
     
     glutSwapBuffers()
 
@@ -54,10 +57,10 @@ def main():
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45, 800/600, 0.1, 50.0)  # Field of view, aspect ratio, near clipping plane, far clipping plane
+    gluPerspective(45, 800/600, 0.1, 50.0)
     glMatrixMode(GL_MODELVIEW)
     glutDisplayFunc(draw)
-    glutIdleFunc(draw)  # Register draw function as idle function for continuous animation
+    glutIdleFunc(draw)
     glutMainLoop()
 
 if __name__ == "__main__":
