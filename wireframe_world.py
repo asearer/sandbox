@@ -7,18 +7,13 @@ import math
 
 # Variables for animation
 angle = 0
+orbit_radius = 3  # Radius of the orbit
 
-def draw_sphere():
-    global angle
-    
+def draw_sphere(x, y, z):
+    # Draw a sphere at the specified position
     glPushMatrix()
-    
-    # Rotate the sphere around the y-axis
-    glRotatef(angle, 0, 1, 0)
-    
-    # Draw a sphere
-    glutWireSphere(1, 20, 20)
-    
+    glTranslatef(x, y, z)
+    glutWireSphere(0.5, 10, 10)  # Adjust radius as needed
     glPopMatrix()
 
 def draw():
@@ -28,17 +23,29 @@ def draw():
     glLoadIdentity()
     gluLookAt(5, 5, 5, 0, 0, 0, 0, 1, 0)  # Eye position, center position, up vector
     
+    # Draw the central sphere
+    draw_sphere(0, 0, 0)
+    
+    # Calculate positions of orbiting spheres
+    x1 = orbit_radius * math.cos(math.radians(angle))
+    z1 = orbit_radius * math.sin(math.radians(angle))
+    x2 = orbit_radius * math.cos(math.radians(angle + 120))  # Offset the angle for the second orbiting sphere
+    z2 = orbit_radius * math.sin(math.radians(angle + 120))
+    
+    # Draw the orbiting spheres
+    draw_sphere(x1, 0, z1)
+    draw_sphere(x2, 0, z2)
+    
     # Increment rotation angle
     angle += 1
     
-    draw_sphere()
     glutSwapBuffers()
 
 def main():
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(800, 600)
-    glutCreateWindow(b"Rotating Sphere")
+    glutCreateWindow(b"Rotating and Orbiting Spheres")
     glEnable(GL_DEPTH_TEST)
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glMatrixMode(GL_PROJECTION)
