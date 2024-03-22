@@ -11,6 +11,9 @@ angle = 0
 orbit_radius = 3  # Radius of the orbit
 rotation_speed = 0.5  # Adjust rotation speed as needed (lower values mean slower rotation)
 
+# List to store the positions of the spheres
+sphere_positions = []
+
 def draw_sphere(x, y, z, rotation_angle):
     # Draw a sphere at the specified position and rotate it around its own axis
     glPushMatrix()
@@ -19,12 +22,25 @@ def draw_sphere(x, y, z, rotation_angle):
     glutWireSphere(0.5, 10, 10)  # Adjust radius as needed
     glPopMatrix()
 
+def check_collision():
+    # Check collision between spheres
+    for i in range(len(sphere_positions)):
+        for j in range(i + 1, len(sphere_positions)):
+            # Calculate distance between spheres
+            dist = math.sqrt(sum((sphere_positions[i][k] - sphere_positions[j][k]) ** 2 for k in range(3)))
+            if dist < 1.0:  # Assuming sphere radius is 0.5
+                print("Collision detected!")
+
 def draw():
     global angle
+    global sphere_positions
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     gluLookAt(5, 5, 5, 0, 0, 0, 0, 1, 0)
+    
+    # Clear the sphere_positions list before updating it
+    sphere_positions = []
     
     draw_sphere(0, 0, 0, angle)
     
@@ -43,8 +59,13 @@ def draw():
             y = orbit_radius * math.sin(math.radians(sphere_angle)) * math.cos(math.radians(orbit_angle))  # Adjust y position
             
             draw_sphere(x, y, z, angle)
+            
+            # Append the position of each sphere to the list
+            sphere_positions.append((x, y, z))
     
     angle += rotation_speed  # Decreased speed
+    
+    check_collision()  # Check collision between spheres
     
     glutSwapBuffers()
 
