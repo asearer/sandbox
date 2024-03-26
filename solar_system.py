@@ -3,8 +3,9 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import math
 
-# Variables for animation
-angle = 0
+angle = 0  # Global variable to control animation angle
+
+# Orbital parameters for planets
 orbit_radius_x = {
     "Mercury": 0.39,
     "Venus": 0.72,
@@ -36,11 +37,20 @@ rotation_speed = {
     "Neptune": 0.08
 }
 
-# List to store the positions of the spheres
+# Dictionary to store positions of the spheres representing planets
 sphere_positions = {}
 
 def draw_sphere(x, y, z, rotation_angle, color, size):
-    # Draw a colored sphere at the specified position and rotate it around its own axis
+    """Draw a colored sphere at the specified position and rotate it around its own axis.
+
+    Args:
+        x (float): x-coordinate of the sphere's center.
+        y (float): y-coordinate of the sphere's center.
+        z (float): z-coordinate of the sphere's center.
+        rotation_angle (float): Angle of rotation around the y-axis.
+        color (tuple): RGB color tuple representing the sphere's color.
+        size (float): Size of the sphere.
+    """
     glPushMatrix()
     glTranslatef(x, y, z)
     glRotatef(rotation_angle, 0, 1, 0)  # Rotate around its own axis
@@ -49,10 +59,11 @@ def draw_sphere(x, y, z, rotation_angle, color, size):
     glPopMatrix()
 
 def draw():
+    """Function to draw the entire scene."""
     global angle
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    gluLookAt(10, 10, 10, 0, 0, 0, 0, 1, 0)
+    gluLookAt(10, 10, 10, 0, 0, 0, 0, 1, 0)  # Set the camera position and orientation
 
     # Draw the Sun
     draw_sphere(0, 0, 0, angle, (1.0, 1.0, 0.0), 0.3)
@@ -66,11 +77,12 @@ def draw():
         # Store the position of each planet
         sphere_positions[planet] = (x, 0, z)
 
-    angle += 0.1
+    angle += 0.1  # Increment angle for animation
 
     glutSwapBuffers()
 
 def main():
+    """Main function to initialize OpenGL and start the main loop."""
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(800, 600)
@@ -82,7 +94,7 @@ def main():
     gluPerspective(45, 800/600, 0.1, 50.0)
     glMatrixMode(GL_MODELVIEW)
     glutDisplayFunc(draw)
-    glutIdleFunc(draw)
+    glutIdleFunc(draw)  # Register draw function for continuous rendering
     glutMainLoop()
 
 if __name__ == "__main__":
