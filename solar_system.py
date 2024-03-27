@@ -2,6 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import math
+import tkinter as tk
 
 angle = 0  # Global variable to control animation angle
 
@@ -41,16 +42,7 @@ rotation_speed = {
 sphere_positions = {}
 
 def draw_sphere(x, y, z, rotation_angle, color, size):
-    """Draw a colored sphere at the specified position and rotate it around its own axis.
-
-    Args:
-        x (float): x-coordinate of the sphere's center.
-        y (float): y-coordinate of the sphere's center.
-        z (float): z-coordinate of the sphere's center.
-        rotation_angle (float): Angle of rotation around the y-axis.
-        color (tuple): RGB color tuple representing the sphere's color.
-        size (float): Size of the sphere.
-    """
+    """Draw a colored sphere at the specified position and rotate it around its own axis."""
     glPushMatrix()
     glTranslatef(x, y, z)
     glRotatef(rotation_angle, 0, 1, 0)  # Rotate around its own axis
@@ -96,6 +88,23 @@ def main():
     glutDisplayFunc(draw)
     glutIdleFunc(draw)  # Register draw function for continuous rendering
     glutMainLoop()
+
+    # Create and configure Tkinter window for displaying information
+    root = tk.Tk()
+    root.title("Planet Information")
+
+    # Function to display planet information
+    def display_info(planet):
+        info_window = tk.Toplevel(root)
+        info_window.title(planet)
+        info_label = tk.Label(info_window, text=f"Planet: {planet}\nOrbit Radius X: {orbit_radius_x[planet]}\nOrbit Radius Y: {orbit_radius_y[planet]}\nRotation Speed: {rotation_speed[planet]}")
+        info_label.pack()
+
+    # Create buttons for each planet
+    for planet in orbit_radius_x.keys():
+        tk.Button(root, text=planet, command=lambda p=planet: display_info(p)).pack()
+
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
