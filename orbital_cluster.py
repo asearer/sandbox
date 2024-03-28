@@ -210,7 +210,7 @@ def mouse(button, state, x, y):
                         break
     elif button == GLUT_LEFT_BUTTON:
         if state == GLUT_UP:
-            dragging_sphere = False
+            dragging_sphere = True
 
 def motion(x, y):
     global dragging_sphere
