@@ -11,12 +11,24 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
 def draw_arm_segment(length):
+    """
+    Draw an arm segment as a cylinder.
+
+    Args:
+        length (float): The length of the arm segment.
+    """
     glutWireCylinder(0.1, length, 20, 20)
 
 def draw_joint():
+    """
+    Draw a joint as a sphere.
+    """
     glutWireSphere(0.15, 20, 20)
 
 def display():
+    """
+    Display function called by OpenGL to render the scene.
+    """
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     gluLookAt(3, 3, 3, 0, 0, 0, 0, 1, 0)
@@ -27,29 +39,22 @@ def display():
     # Draw the base segment
     draw_arm_segment(2)
 
-    # Draw the first joint
+    # Draw the joint
     glTranslatef(0, 0, 2)
     draw_joint()
-
-    # Draw the second segment
-    glRotatef(45, 0, 1, 0)
-    glTranslatef(0, 0, 1.5)
-    draw_arm_segment(1.5)
-
-    # Draw the second joint
-    glTranslatef(0, 0, 1.5)
-    draw_joint()
-
-    # Draw the third segment
-    glRotatef(45, 0, 1, 0)
-    glTranslatef(0, 0, 1)
-    draw_arm_segment(1)
 
     glPopMatrix()
 
     glutSwapBuffers()
 
 def reshape(width, height):
+    """
+    Reshape function to handle window resizing.
+
+    Args:
+        width (int): The new width of the window.
+        height (int): The new height of the window.
+    """
     glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -58,10 +63,13 @@ def reshape(width, height):
     glLoadIdentity()
 
 def main():
+    """
+    Main function to initialize OpenGL and start the main loop.
+    """
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(400, 400)
-    glutCreateWindow(b"Multi-jointed Arm Simulation")
+    glutCreateWindow(b"Single-jointed Arm Simulation")
 
     glEnable(GL_DEPTH_TEST)
     glClearColor(0, 0, 0, 1)
