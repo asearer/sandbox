@@ -43,6 +43,10 @@ def display():
     glTranslatef(0, 0, 2)
     draw_joint()
 
+    # Draw the second segment
+    glTranslatef(0, 0, 0.15)  # Adjust according to joint size
+    draw_arm_segment(1.5)  # Adjust length as needed
+
     glPopMatrix()
 
     glutSwapBuffers()
