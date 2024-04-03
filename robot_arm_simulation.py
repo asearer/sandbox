@@ -36,16 +36,37 @@ def display():
     glPushMatrix()
     glColor3f(1, 1, 1)  # White color for wireframe
 
+    # Calculate total arm length
+    total_arm_length = 2 + 0.15 + 1.5  # Base segment + joint + second segment
+
+    # Calculate the amount to translate to center the arm simulation
+    center_translation = total_arm_length / 2
+
+    # Translate the entire arm to the center and then move it to the right
+    glTranslatef(-center_translation + 1.5, 0, 0)
+
     # Draw the base segment
     draw_arm_segment(2)
 
-    # Draw the joint
+    # Draw the first joint at the pole
+    glPushMatrix()
     glTranslatef(0, 0, 2)
     draw_joint()
+    glPopMatrix()
 
     # Draw the second segment
-    glTranslatef(0, 0, 0.15)  # Adjust according to joint size
-    draw_arm_segment(1.5)  # Adjust length as needed
+    glTranslatef(0, 0, 2)
+    draw_arm_segment(0.15)
+
+    # Draw the second joint at the pole
+    glPushMatrix()
+    glTranslatef(0, 0, 0.15)
+    draw_joint()
+    glPopMatrix()
+
+    # Draw the third segment
+    glTranslatef(0, 0, 0.15)
+    draw_arm_segment(1.5)
 
     glPopMatrix()
 
