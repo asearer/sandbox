@@ -10,6 +10,10 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
+# Define global variables for rotation angles
+rotation_x = 0.0
+rotation_y = 0.0
+
 def draw_arm_segment(length):
     """
     Draw an arm segment as a cylinder.
@@ -29,9 +33,15 @@ def display():
     """
     Display function called by OpenGL to render the scene.
     """
+    global rotation_x, rotation_y
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     gluLookAt(3, 3, 3, 0, 0, 0, 0, 1, 0)
+
+    # Apply rotation
+    glRotatef(rotation_x, 1, 0, 0)
+    glRotatef(rotation_y, 0, 1, 0)
 
     glPushMatrix()
     glColor3f(1, 1, 1)  # White color for wireframe
@@ -87,6 +97,29 @@ def reshape(width, height):
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
+def special_key_pressed(key, x, y):
+    """
+    Function to handle special key presses, such as arrow keys for rotation.
+
+    Args:
+        key (int): The code of the special key pressed.
+        x (int): The x-coordinate of the mouse position when the key was pressed.
+        y (int): The y-coordinate of the mouse position when the key was pressed.
+    """
+    global rotation_x, rotation_y
+
+    # Rotate the view based on the arrow key pressed
+    if key == GLUT_KEY_UP:
+        rotation_x += 5.0
+    elif key == GLUT_KEY_DOWN:
+        rotation_x -= 5.0
+    elif key == GLUT_KEY_LEFT:
+        rotation_y -= 5.0
+    elif key == GLUT_KEY_RIGHT:
+        rotation_y += 5.0
+
+    glutPostRedisplay()
+
 def main():
     """
     Main function to initialize OpenGL and start the main loop.
@@ -101,6 +134,7 @@ def main():
 
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
+    glutSpecialFunc(special_key_pressed)  # Register special key callback
 
     glutMainLoop()
 
