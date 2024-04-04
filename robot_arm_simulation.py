@@ -68,9 +68,9 @@ def display():
     glTranslatef(0, 0, 2)
     draw_arm_segment(0.15)
 
-    # Draw the second joint at the pole
+    # Draw the second joint at the end of the second segment
     glPushMatrix()
-    glTranslatef(0, 0, 0.15)
+    glTranslatef(0, 0, 2 + -0.25)  # Translate to the end of the second segment
     draw_joint()
     glPopMatrix()
 
