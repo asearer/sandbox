@@ -10,9 +10,12 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-# Define global variables for rotation angles
+# Define global variables
 rotation_x = 0.0
 rotation_y = 0.0
+mouse_x = 0
+mouse_y = 0
+is_dragging = False
 
 def draw_arm_segment(length):
     """
@@ -46,15 +49,6 @@ def display():
     glPushMatrix()
     glColor3f(1, 1, 1)  # White color for wireframe
 
-    # Calculate total arm length
-    total_arm_length = 2 + 0.15 + 1.5  # Base segment + joint + second segment
-
-    # Calculate the amount to translate to center the arm simulation
-    center_translation = total_arm_length / 2
-
-    # Translate the entire arm to the center and then move it to the right
-    glTranslatef(-center_translation + 1.5, 0, 0)
-
     # Draw the base segment
     draw_arm_segment(2)
 
@@ -68,9 +62,9 @@ def display():
     glTranslatef(0, 0, 2)
     draw_arm_segment(0.15)
 
-    # Draw the second joint at the end of the second segment
+    # Draw the second joint
     glPushMatrix()
-    glTranslatef(0, 0, 2 + -0.25)  # Translate to the end of the second segment
+    glTranslatef(0, 0, 2 + -0.25)
     draw_joint()
     glPopMatrix()
 
@@ -120,6 +114,45 @@ def special_key_pressed(key, x, y):
 
     glutPostRedisplay()
 
+def mouse(button, state, x, y):
+    """
+    Function to handle mouse events.
+
+    Args:
+        button (int): The button pressed (GLUT_LEFT_BUTTON, GLUT_RIGHT_BUTTON, or GLUT_MIDDLE_BUTTON).
+        state (int): The state of the button (GLUT_UP or GLUT_DOWN).
+        x (int): The x-coordinate of the mouse position when the button was pressed.
+        y (int): The y-coordinate of the mouse position when the button was pressed.
+    """
+    global is_dragging, mouse_x, mouse_y
+
+    if button == GLUT_LEFT_BUTTON:
+        if state == GLUT_DOWN:
+            is_dragging = True
+            mouse_x = x
+            mouse_y = y
+        elif state == GLUT_UP:
+            is_dragging = False
+
+def mouse_motion(x, y):
+    """
+    Function to handle mouse motion when a button is pressed.
+
+    Args:
+        x (int): The new x-coordinate of the mouse position.
+        y (int): The new y-coordinate of the mouse position.
+    """
+    global mouse_x, mouse_y, rotation_x, rotation_y
+
+    if is_dragging:
+        rotation_x += (y - mouse_y) * 0.5
+        rotation_y += (x - mouse_x) * 0.5
+
+        mouse_x = x
+        mouse_y = y
+
+        glutPostRedisplay()
+
 def main():
     """
     Main function to initialize OpenGL and start the main loop.
@@ -134,7 +167,9 @@ def main():
 
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
-    glutSpecialFunc(special_key_pressed)  # Register special key callback
+    glutSpecialFunc(special_key_pressed)
+    glutMouseFunc(mouse)  # Register mouse callback
+    glutMotionFunc(mouse_motion)  # Register mouse motion callback
 
     glutMainLoop()
 
